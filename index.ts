@@ -616,8 +616,8 @@ function drawLines() {
   ctx.lineWidth = 2;
 
   for (const [a, b] of lines) {
-    const direction = getVector(a.position, b.position);
-    const scaler = 1e4;
+    const direction = normalize(getVector(a.position, b.position));
+    const scaler = getCanvasExtent();
     const p1 = transform.transformPoint({
       x: a.position.x - direction.x * scaler,
       y: a.position.y - direction.y * scaler,
@@ -639,6 +639,15 @@ function drawLines() {
   }
 
   ctx.restore();
+}
+
+function getCanvasExtent() {
+  return getNorm(
+    transform.inverse().transformPoint({
+      x: canvas.width,
+      y: canvas.height,
+    })
+  );
 }
 
 function drawPolygons() {
